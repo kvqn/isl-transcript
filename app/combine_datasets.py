@@ -1,6 +1,6 @@
 import os
-from app import CHARACTERS
-from app.dataset import (
+from app import (
+    CHARACTERS,
     DATASET_PATH_ISL_1,
     DATASET_PATH_ISL_2,
     DATASET_PATH_ISL_3,
@@ -20,7 +20,8 @@ def combine_datasets(args):
     dataset_path_isl_3 = DATASET_PATH_ISL_3
     dataset_path_isl_main = DATASET_PATH_ISL_MAIN
 
-    split_ratio = 0.8
+    split_ratio = args.ratio
+    assert split_ratio > 0 and split_ratio < 1
 
     if not os.path.isdir(dataset_path_isl_main):
         os.makedirs(dataset_path_isl_main)
