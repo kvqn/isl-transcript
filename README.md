@@ -1,3 +1,7 @@
+# ISL Transcript
+
+Tested on Python 3.11.5
+
 ## Dataset
 
 The dataset is created by combining 3 datasets from Kaggle.
