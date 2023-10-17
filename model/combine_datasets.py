@@ -1,5 +1,5 @@
 import os
-from app import (
+from model import (
     CHARACTERS,
     DATASET_PATH_ISL_1,
     DATASET_PATH_ISL_2,

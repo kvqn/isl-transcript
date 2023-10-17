@@ -1,5 +1,5 @@
 import os
-from app.util import ask_bool_question
+from model.util import ask_bool_question
 
 
 def create_isl_model(args):

@@ -1,7 +1,7 @@
 import argparse
-from app.combine_datasets import combine_datasets
-from app.create_isl_model import create_isl_model
-from app.test_isl_model import test_isl_model
+from model.combine_datasets import combine_datasets
+from model.create_isl_model import create_isl_model
+from model.test_isl_model import test_isl_model
 
 parser = argparse.ArgumentParser(description="CLI for ISL Transcription App")
 
