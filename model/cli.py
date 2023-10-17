@@ -16,7 +16,7 @@ command_create_isl_model = command.add_parser("create-isl-model", help="Create t
 command_create_isl_model.add_argument("--model-path", type=str, default="model.keras", help="Path to save the model")
 
 command_test_isl_model = command.add_parser("test-isl-model", help="Test the ISL model")
-command_test_isl_model.add_argument("--model-path", type=str, default="model.h5", help="Path to load the model")
+command_test_isl_model.add_argument("--model-path", type=str, default="model.keras", help="Path to load the model")
 
 command_start_server = command.add_parser("start-server", help="Start the FastAPI server.")
 command_start_server.add_argument("--reload", help="Enable hot reload", action="store_true", default=False)
