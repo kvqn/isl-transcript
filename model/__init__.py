@@ -8,3 +8,5 @@ DATASET_PATH_ISL_1 = os.path.join("dataset", "1")
 DATASET_PATH_ISL_2 = os.path.join("dataset", "2")
 DATASET_PATH_ISL_3 = os.path.join("dataset", "3")
 DATASET_PATH_ISL_MAIN = os.path.join("dataset", "main", "isl")
+
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
