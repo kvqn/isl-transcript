@@ -10,9 +10,10 @@ command = parser.add_subparsers(dest="command", required=True)
 
 command_create_dataset = command.add_parser("combine-datasets", help="Combine the datasets")
 command_create_dataset.add_argument("--ratio", type=float, default=0.8, help="Train/Test split ratio")
+command_create_dataset.add_argument("--images-per-class", type=int, default=100, help="Number of images per class")
 
 command_create_isl_model = command.add_parser("create-isl-model", help="Create the ISL model")
-command_create_isl_model.add_argument("--model-path", type=str, default="model.h5", help="Path to save the model")
+command_create_isl_model.add_argument("--model-path", type=str, default="model.keras", help="Path to save the model")
 
 command_test_isl_model = command.add_parser("test-isl-model", help="Test the ISL model")
 command_test_isl_model.add_argument("--model-path", type=str, default="model.h5", help="Path to load the model")

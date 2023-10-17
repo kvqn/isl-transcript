@@ -7,6 +7,12 @@ from model import (
     DATASET_PATH_ISL_MAIN,
 )
 import shutil
+import random
+
+
+def get_random(files: list[str], n: int):
+    random.shuffle(files)
+    return files[:n]
 
 
 def combine_datasets(args):
@@ -22,6 +28,9 @@ def combine_datasets(args):
 
     split_ratio = args.ratio
     assert split_ratio > 0 and split_ratio < 1
+
+    images_per_class = args.images_per_class
+    assert images_per_class > 0
 
     if not os.path.isdir(dataset_path_isl_main):
         os.makedirs(dataset_path_isl_main)
@@ -39,6 +48,7 @@ def combine_datasets(args):
         src_dir = os.path.join(dataset_path_isl_1, "Indian", char)
         if os.path.isdir(src_dir):
             files = [os.path.join(src_dir, file) for file in os.listdir(src_dir)]
+            files = get_random(files, (images_per_class - len(train_files)-len(test_files))//3)
             train_files.extend(files[: int(len(files) * split_ratio)])
             test_files.extend(files[int(len(files) * split_ratio) :])
 
@@ -46,6 +56,7 @@ def combine_datasets(args):
         src_dir = os.path.join(dataset_path_isl_2, "original_images", char)
         if os.path.isdir(src_dir):
             files = [os.path.join(src_dir, file) for file in os.listdir(src_dir)]
+            files = get_random(files, (images_per_class - len(train_files)-len(test_files))//2)
             train_files.extend(files[: int(len(files) * split_ratio)])
             test_files.extend(files[int(len(files) * split_ratio) :])
 
@@ -53,18 +64,19 @@ def combine_datasets(args):
         src_dir = os.path.join(dataset_path_isl_3, "Train", char)
         if os.path.isdir(src_dir):
             files = [os.path.join(src_dir, file) for file in os.listdir(src_dir)]
+            files = get_random(files, (images_per_class - len(train_files)-len(test_files))//1)
             train_files.extend(files[: int(len(files) * split_ratio)])
             test_files.extend(files[int(len(files) * split_ratio) :])
-        src_dir = os.path.join(dataset_path_isl_3, "Test", char)
-        if os.path.isdir(src_dir):
-            files = [os.path.join(src_dir, file) for file in os.listdir(src_dir)]
-            train_files.extend(files[: int(len(files) * split_ratio)])
-            test_files.extend(files[int(len(files) * split_ratio) :])
-        src_dir = os.path.join(dataset_path_isl_3, "Validation", char)
-        if os.path.isdir(src_dir):
-            files = [os.path.join(src_dir, file) for file in os.listdir(src_dir)]
-            train_files.extend(files[: int(len(files) * split_ratio)])
-            test_files.extend(files[int(len(files) * split_ratio) :])
+        # src_dir = os.path.join(dataset_path_isl_3, "Test", char)
+        # if os.path.isdir(src_dir):
+        #     files = [os.path.join(src_dir, file) for file in os.listdir(src_dir)]
+        #     train_files.extend(files[: int(len(files) * split_ratio)])
+        #     test_files.extend(files[int(len(files) * split_ratio) :])
+        # src_dir = os.path.join(dataset_path_isl_3, "Validation", char)
+        # if os.path.isdir(src_dir):
+        #     files = [os.path.join(src_dir, file) for file in os.listdir(src_dir)]
+        #     train_files.extend(files[: int(len(files) * split_ratio)])
+        #     test_files.extend(files[int(len(files) * split_ratio) :])
 
         # Copy files
         for i, file in enumerate(train_files):
