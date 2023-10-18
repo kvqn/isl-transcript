@@ -9,6 +9,8 @@ from model import (
 import shutil
 import random
 
+from model.util import ask_bool_question
+
 
 def get_random(files: list[str], n: int):
     random.shuffle(files)
@@ -32,8 +34,13 @@ def combine_datasets(args):
     images_per_class = args.images_per_class
     assert images_per_class > 0
 
-    if not os.path.isdir(dataset_path_isl_main):
-        os.makedirs(dataset_path_isl_main)
+    if os.path.isdir(dataset_path_isl_main):
+        resp = ask_bool_question("Main dataset already exists. Do you want to delete it and continue? (y/n)")
+        if not resp:
+            return
+        shutil.rmtree(dataset_path_isl_main)
+
+    os.makedirs(dataset_path_isl_main)
 
     for char in CHARACTERS:
         train_dir = os.path.join(dataset_path_isl_main, "train", char)

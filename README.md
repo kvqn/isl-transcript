@@ -6,19 +6,20 @@ Tested on Python 3.11.5
 
 The dataset is created by combining 3 datasets from Kaggle.
 
-### Downloading the dataset
-
-Download from [here](https://drive.google.com/file/d/1-zWChpYrN-n3ULJNtPWQaot2uvCcFNAn/view?usp=drive_link) and place
-the main/ folder in the dataset/ folder so that the structure looks like this
-
 ```
 dataset/
-    main/
+    1/
+        Indian/
+    2/
+        original_images/
+    3/
+        Test/
+        Train/
+        Validation/
+    main/ (created by the CLI by combining the 3 datasets)
         test/
         train/
 ```
-
-### Creating the dataset
 
 Download the following datasets and then rename their extracted folders 1, 2, 3, respectively.
 
