@@ -35,7 +35,9 @@ def combine_datasets(args):
     assert images_per_class > 0
 
     if os.path.isdir(dataset_path_isl_main):
-        resp = ask_bool_question("Main dataset already exists. Do you want to delete it and continue? (y/n)")
+        resp = ask_bool_question(
+            "Main dataset already exists. Do you want to delete it and continue? (y/n)"
+        )
         if not resp:
             return
         shutil.rmtree(dataset_path_isl_main)
@@ -55,7 +57,9 @@ def combine_datasets(args):
         src_dir = os.path.join(dataset_path_isl_1, "Indian", char)
         if os.path.isdir(src_dir):
             files = [os.path.join(src_dir, file) for file in os.listdir(src_dir)]
-            files = get_random(files, (images_per_class - len(train_files)-len(test_files))//3)
+            files = get_random(
+                files, (images_per_class - len(train_files) - len(test_files)) // 3
+            )
             train_files.extend(files[: int(len(files) * split_ratio)])
             test_files.extend(files[int(len(files) * split_ratio) :])
 
@@ -63,7 +67,9 @@ def combine_datasets(args):
         src_dir = os.path.join(dataset_path_isl_2, "original_images", char)
         if os.path.isdir(src_dir):
             files = [os.path.join(src_dir, file) for file in os.listdir(src_dir)]
-            files = get_random(files, (images_per_class - len(train_files)-len(test_files))//2)
+            files = get_random(
+                files, (images_per_class - len(train_files) - len(test_files)) // 2
+            )
             train_files.extend(files[: int(len(files) * split_ratio)])
             test_files.extend(files[int(len(files) * split_ratio) :])
 
@@ -71,7 +77,9 @@ def combine_datasets(args):
         src_dir = os.path.join(dataset_path_isl_3, "Train", char)
         if os.path.isdir(src_dir):
             files = [os.path.join(src_dir, file) for file in os.listdir(src_dir)]
-            files = get_random(files, (images_per_class - len(train_files)-len(test_files))//1)
+            files = get_random(
+                files, (images_per_class - len(train_files) - len(test_files)) // 1
+            )
             train_files.extend(files[: int(len(files) * split_ratio)])
             test_files.extend(files[int(len(files) * split_ratio) :])
         # src_dir = os.path.join(dataset_path_isl_3, "Test", char)

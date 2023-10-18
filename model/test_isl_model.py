@@ -22,4 +22,3 @@ def test_isl_model(args):
     )
 
     model.evaluate(testing_dataset)
-

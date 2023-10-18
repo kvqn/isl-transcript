@@ -15,6 +15,7 @@ if model is None:
 
 app = FastAPI()
 
+
 @app.post("/")
 async def root():
     return {"message": "Hello World"}
@@ -22,8 +23,8 @@ async def root():
 
 @app.post("/predict")
 async def predict(file: Annotated[str, File()]):
-    if file.startswith('data:image/jpeg;base64,'):
-        file = file[len('data:image/jpeg;base64,'):]
+    if file.startswith("data:image/jpeg;base64,"):
+        file = file[len("data:image/jpeg;base64,") :]
     base64_bytes = base64.b64decode(file)
     image = Image.open(BytesIO(base64_bytes))
     image = image.resize((256, 256))
@@ -35,5 +36,5 @@ async def predict(file: Annotated[str, File()]):
 
 def start_server(args):
     import uvicorn
-    uvicorn.run("model.server:app", reload=args.reload)
 
+    uvicorn.run("model.server:app", reload=args.reload)

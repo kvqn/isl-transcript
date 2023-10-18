@@ -35,7 +35,9 @@ def create_isl_model(args):
 
     print(f"Model will be saved at {model_path}")
 
-    data = keras.utils.image_dataset_from_directory(TRAIN_DATASET, class_names=CLASS_NAMES, label_mode="categorical")
+    data = keras.utils.image_dataset_from_directory(
+        TRAIN_DATASET, class_names=CLASS_NAMES, label_mode="categorical"
+    )
 
     model = keras.Sequential()
     model.add(layers.Conv2D(32, (3, 3), activation="relu", input_shape=(256, 256, 3)))

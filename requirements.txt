@@ -1,4 +1,4 @@
-black==23.9.1
+black[jupyter]
 ipykernel==6.25.2
 mdformat==0.7.17
 Pillow==10.0.1
