@@ -1,9 +1,20 @@
 "use client"
 
-import React from "react"
+import React, { useEffect, useState } from "react"
 import Webcam from "react-webcam"
 
-export default function Page() {
+const sleep = (delay: number) =>
+  new Promise((resolve) => setTimeout(resolve, delay))
+
+type CameraComponentProps = {
+  setText: React.Dispatch<React.SetStateAction<string>>
+}
+
+function CameraComponent(props: CameraComponentProps) {
+  const { setText } = props
+
+  let text = ""
+
   const videoConstraints = {
     width: 1280,
     height: 720,
@@ -12,8 +23,7 @@ export default function Page() {
 
   const webcamRef = React.useRef(null)
   const capture = React.useCallback(() => {
-    if (!webcamRef.current) return
-    if (!webcamRef.current.getScreenshot) return
+    // @ts-ignore
     const imageSrc = webcamRef.current.getScreenshot()
     return imageSrc
   }, [webcamRef])
@@ -27,20 +37,63 @@ export default function Page() {
       },
       body: JSON.stringify({ file: capture() }),
     })
-    console.log(await result.json())
+
+    const resp = await result.json()
+    const char = resp.prediction
+    if (!text.endsWith(char)) {
+      text = text + char
+      setText(text)
+    }
   }
 
+  async function cameraLoop() {
+    while (true) {
+      console.log("a")
+      await sleep(1000)
+      console.log("b")
+      await action()
+    }
+  }
+
+  useEffect(() => {
+    cameraLoop()
+  }, [])
+
   return (
-    <>
-      <Webcam
-        audio={false}
-        height={720}
-        ref={webcamRef}
-        screenshotFormat="image/jpeg"
-        width={1280}
-        videoConstraints={videoConstraints}
-      />
-      <button onClick={action}>Capture photo</button>
-    </>
+    <Webcam
+      audio={false}
+      ref={webcamRef}
+      screenshotFormat="image/jpeg"
+      videoConstraints={videoConstraints}
+    />
+  )
+}
+
+export default function Page() {
+  const [text, setText] = useState("")
+  const [started, setStarted] = useState(false)
+
+  return (
+    <div className="flex h-screen flex-col justify-evenly">
+      <div className="flex h-4/5 w-full justify-around border-2 p-10">
+        {started ? (
+          <CameraComponent setText={setText} />
+        ) : (
+          <div className="flex items-center justify-center">
+            <button
+              onClick={() => {
+                setStarted(true)
+              }}
+              className="bg-red-50"
+            >
+              Start
+            </button>
+          </div>
+        )}
+      </div>
+      <div className="m-10 flex h-1/5 items-center justify-center border-2 border-solid font-['Poppins'] text-3xl">
+        <p>{text}</p>
+      </div>
+    </div>
   )
 }
