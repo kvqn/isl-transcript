@@ -3,6 +3,7 @@ from model.combine_datasets import combine_datasets
 from model.create_isl_model import create_isl_model
 from model.test_isl_model import test_isl_model
 from model.server import start_server
+from model.hand_landmarks import create_landmarks_csv
 
 parser = argparse.ArgumentParser(description="CLI for ISL Transcription App")
 
@@ -37,6 +38,10 @@ command_start_server.add_argument(
     "--reload", help="Enable hot reload", action="store_true", default=False
 )
 
+command_create_landmarks_csv = command.add_parser(
+    "create-landmarks-csv", help="Create landmarks csv"
+)
+
 
 def main():
     args = parser.parse_args()
@@ -48,3 +53,5 @@ def main():
         test_isl_model(args)
     elif args.command == "start-server":
         start_server(args)
+    elif args.command == "create-landmarks-csv":
+        create_landmarks_csv(args)

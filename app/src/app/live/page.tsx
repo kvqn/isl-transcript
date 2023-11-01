@@ -40,7 +40,7 @@ function CameraComponent(props: CameraComponentProps) {
 
     const resp = await result.json()
     const char = resp.prediction
-    if (!text.endsWith(char)) {
+    if (char && !text.endsWith(char)) {
       text = text + char
       setText(text)
     }
@@ -49,7 +49,7 @@ function CameraComponent(props: CameraComponentProps) {
   async function cameraLoop() {
     while (true) {
       console.log("a")
-      await sleep(1000)
+      await sleep(50)
       console.log("b")
       await action()
     }

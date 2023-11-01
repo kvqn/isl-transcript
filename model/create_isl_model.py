@@ -1,14 +1,13 @@
 import os
 from tensorflow import keras
 from model.util import ask_bool_question
-from model import DATASET_PATH_ISL_MAIN
+from model import DATASET_PATH_ISL_MAIN, CLASS_NAMES, LANDMARKS_PATH
+import pandas as pd
+import numpy as np
+import tensorflow as tf
 
 layers = keras.layers
 
-
-CLASS_NAMES = [str(i) for i in range(0, 10)] + [
-    chr(i) for i in range(ord("A"), ord("Z") + 1)
-]
 
 TRAIN_DATASET = os.path.join(DATASET_PATH_ISL_MAIN, "train")
 
@@ -35,23 +34,36 @@ def create_isl_model(args):
 
     print(f"Model will be saved at {model_path}")
 
-    data = keras.utils.image_dataset_from_directory(
-        TRAIN_DATASET, class_names=CLASS_NAMES, label_mode="categorical"
-    )
+    df = pd.read_csv(LANDMARKS_PATH)
+
+    Y = []
+    X = []
+
+    for i in df.values:
+        y = np.zeros(len(CLASS_NAMES))
+        y[CLASS_NAMES.index(i[1])] = 1
+        # print(y)
+        x = np.asarray(i[2:]).astype("float32")
+        x = x.reshape(1, -1)
+        y = y.reshape(1, -1)
+        Y.append(y)
+        X.append(x)
 
     model = keras.Sequential()
-    model.add(layers.Conv2D(32, (3, 3), activation="relu", input_shape=(256, 256, 3)))
-    model.add(layers.MaxPooling2D())
-    model.add(layers.Conv2D(16, (3, 3), activation="relu"))
-    model.add(layers.Flatten())
+    model.add(layers.Dense(128, activation="relu", input_shape=(X[0].shape[1],)))
     model.add(layers.Dense(128, activation="relu"))
     model.add(layers.Dense(len(CLASS_NAMES), activation="softmax"))
+
+    # X = np.asarray(X)
+    # Y = np.asarray(Y)
+
+    Z = tf.data.Dataset.from_tensor_slices((X, Y))
 
     model.compile("adam", loss="categorical_crossentropy", metrics=["accuracy"])
 
     tensorboard_callback = keras.callbacks.TensorBoard(log_dir=LOG_DIR)
 
-    model.fit(data, epochs=4, callbacks=[tensorboard_callback])
+    model.fit(Z, epochs=5, callbacks=[tensorboard_callback])
 
     model.save(model_path)
 
