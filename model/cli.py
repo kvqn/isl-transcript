@@ -25,6 +25,9 @@ command_create_isl_model = command.add_parser(
 command_create_isl_model.add_argument(
     "--model-path", type=str, default="model.keras", help="Path to save the model"
 )
+command_create_isl_model.add_argument(
+    "--epochs", type=int, default=3, help="Epochs to train for"
+)
 
 command_test_isl_model = command.add_parser("test-isl-model", help="Test the ISL model")
 command_test_isl_model.add_argument(

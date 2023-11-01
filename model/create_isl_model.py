@@ -32,6 +32,8 @@ def create_isl_model(args):
         if not resp:
             return
 
+    epochs = args.epochs
+
     print(f"Model will be saved at {model_path}")
 
     df = pd.read_csv(LANDMARKS_PATH)
@@ -49,21 +51,26 @@ def create_isl_model(args):
         Y.append(y)
         X.append(x)
 
+    Z = tf.data.Dataset.from_tensor_slices((X, Y))
+    Z.shuffle(Z.cardinality())
+
     model = keras.Sequential()
-    model.add(layers.Dense(128, activation="relu", input_shape=(X[0].shape[1],)))
-    model.add(layers.Dense(128, activation="relu"))
+    model.add(layers.Dense(256, input_shape=(X[0].shape[1],)))
+    model.add(layers.Dense(256))
+    model.add(layers.Dense(256))
+    model.add(layers.Dense(256))
+    model.add(layers.Dense(256))
+    model.add(layers.Dense(256))
     model.add(layers.Dense(len(CLASS_NAMES), activation="softmax"))
 
     # X = np.asarray(X)
     # Y = np.asarray(Y)
 
-    Z = tf.data.Dataset.from_tensor_slices((X, Y))
-
     model.compile("adam", loss="categorical_crossentropy", metrics=["accuracy"])
 
     tensorboard_callback = keras.callbacks.TensorBoard(log_dir=LOG_DIR)
 
-    model.fit(Z, epochs=5, callbacks=[tensorboard_callback])
+    model.fit(Z, epochs=epochs, callbacks=[tensorboard_callback])
 
     model.save(model_path)
 
