@@ -49,19 +49,28 @@ def create_isl_model(args):
 
     print(f"Model will be saved at {model_path}")
 
-    data = keras.utils.image_dataset_from_directory(
-        TRAIN_DATASET, class_names=CLASS_NAMES, label_mode="categorical"
+    data_train = keras.utils.image_dataset_from_directory(
+        TRAIN_DATASET,
+        subset="training",
+        seed=69,
+        class_names=CLASS_NAMES,
+        label_mode="categorical",
+        validation_split=0.2,
     )
 
-    data.shuffle(data.cardinality())
-
-    data_train = data.take(100)
-    data_validation = data.skip(100).take(10)
+    data_validation = keras.utils.image_dataset_from_directory(
+        TRAIN_DATASET,
+        subset="validation",
+        seed=69,
+        class_names=CLASS_NAMES,
+        label_mode="categorical",
+        validation_split=0.2,
+    )
 
     model = keras.Sequential()
-    model.add(layers.Conv2D(4, (4, 4), activation="relu", input_shape=(256, 256, 3)))
+    model.add(layers.Conv2D(16, (4, 4), activation="relu", input_shape=(256, 256, 3)))
     model.add(layers.MaxPooling2D())
-    model.add(layers.Conv2D(2, (4, 4), activation="relu"))
+    model.add(layers.Conv2D(8, (4, 4), activation="relu"))
     model.add(layers.Flatten())
     model.add(layers.Dense(128, activation="relu"))
     model.add(layers.Dense(len(CLASS_NAMES), activation="softmax"))
@@ -72,7 +81,7 @@ def create_isl_model(args):
 
     model.fit(
         data_train,
-        epochs=epochs,
+        epochs=10,
         callbacks=[tensorboard_callback],
         validation_data=data_validation,
     )
