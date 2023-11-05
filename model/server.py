@@ -36,8 +36,11 @@ async def predict(file: Annotated[str, File()]):
     image = image.resize((256, 256))
     image = tf.keras.utils.img_to_array(image)
     image = tf.expand_dims(image, axis=0)
-    prediction = CHARACTERS[model.predict(image).argmax()]
-    return {"prediction": prediction}
+    predict = model.predict(image)
+    # print(predict)
+    prediction = CHARACTERS[predict.argmax()]
+    confidence = float(predict.max())
+    return {"prediction": prediction, "confidence": confidence}
 
 
 def start_server(args):
