@@ -72,7 +72,9 @@ def combine_datasets(args):
         #     train_files.extend(files[: int(len(files) * split_ratio)])
         #     test_files.extend(files[int(len(files) * split_ratio) :])
 
-        # Copy files
+        train_files = get_random(train_files, args.images_per_class)
+
+        # Create symlinks
         for i, file in enumerate(train_files):
             ext = file.split(".")[-1]
             shutil.copy(file, os.path.join(train_dir, f"{i}.{ext}"))

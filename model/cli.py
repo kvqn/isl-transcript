@@ -8,9 +8,6 @@ command_create_dataset = command.add_parser(
     "combine-datasets", help="Combine the datasets"
 )
 command_create_dataset.add_argument(
-    "--ratio", type=float, default=0.8, help="Train/Test split ratio"
-)
-command_create_dataset.add_argument(
     "--images-per-class", type=int, default=100, help="Number of images per class"
 )
 
