@@ -49,100 +49,32 @@ def create_isl_model(args):
 
     print(f"Model will be saved at {model_path}")
 
-    df = pd.read_csv(LANDMARKS_PATH)
+    data = keras.utils.image_dataset_from_directory(
+        TRAIN_DATASET, class_names=CLASS_NAMES, label_mode="categorical"
+    )
 
-    per_class = {}
-    for i in CLASS_NAMES:
-        per_class[i] = []
+    data.shuffle(data.cardinality())
 
-    for i in df.values:
-        y = np.zeros(len(CLASS_NAMES))
-        y[CLASS_NAMES.index(i[1])] = 1
-        # print(y)
-        x = np.asarray(i[2:]).astype("float32")
-        # x = []
-        # for j in range(21):
-        #     x.append(_x[2 * j] ** 2 + _x[2 * j + 1] ** 2)
-        # x = np.asarray(x).astype("float32")
-        x = x.reshape(1, -1)
-        y = y.reshape(1, -1)
-        # Y.append(y)
-        # X.append(x)
-        per_class[i[1]].append((x, y))
-
-    X_train = []
-    Y_train = []
-    X_validation = []
-    Y_validation = []
-
-    N_TRAIN_PER_CLASS = 1
-    N_VALIDATION_PER_CLASS = 1
-
-    for i in CLASS_NAMES:
-        print(f"{i}: {len(per_class[i])}")
-        random.shuffle(per_class[i])
-        train = pick_random_and_remove(per_class[i], N_TRAIN_PER_CLASS)
-        validation = pick_random_and_remove(per_class[i], N_VALIDATION_PER_CLASS)
-        x_train = [i[0] for i in train]
-        y_train = [i[1] for i in train]
-        x_validation = [i[0] for i in validation]
-        y_validation = [i[1] for i in validation]
-        X_train.extend(x_train)
-        Y_train.extend(y_train)
-        X_validation.extend(x_validation)
-        Y_validation.extend(y_validation)
-
-    # Z = tf.data.Dataset.from_tensor_slices((X, Y))
-    # Z.shuffle(Z.cardinality())
-    # Z = Z.take(2000)
-
-    # Z_validation = Z.take(int(len(Z) * 0.8))
-    # Z_train = Z.skip(int(len(Z) * 0.8))
-
-    Z_train = tf.data.Dataset.from_tensor_slices((X_train, Y_train))
-    Z_validation = tf.data.Dataset.from_tensor_slices((X_validation, Y_validation))
+    data_train = data.take(100)
+    data_validation = data.skip(100).take(10)
 
     model = keras.Sequential()
-    model.add(layers.Input(shape=(42,)))
-    # model.add(layers.Reshape((21, 2), input_shape=(42,)))
-    # model.add(layers.Conv2D(21, (1, 2)))
-    # model.add(layers.Flatten())
-    # model.add(layers.Dense(210))
-    # model.add(layers.Dense(128), activation="relu")
-    # model.add(layers.Dropout(0.3))
-    model.add(layers.Activation(activation=tf.math.square))
-    # model.add(layers.Dense(200, activation=tf.math.square))
-    # model.add(layers.Dense(100, activation="relu"))
-    model.add(layers.Dense(100, activation=tf.math.tanh))
-    model.add(layers.Dense(50, activation="relu"))
-    # model.add(layers.Dense(400, activation="relu"))
-    # model.add(layers.Dense(800, activation="relu"))
-    # model.add(layers.Dense(400, activation="relu"))
-    # model.add(layers.Dense(200, activation="relu"))
-    # model.add(layers.Dense(100, activation="relu"))
-    # model.add(layers.Dense())
-    # model.add(layers.Dense(861))
-    # model.add(layers.MaxPooling1D())
+    model.add(layers.Conv2D(16, (3, 3), activation="relu", input_shape=(256, 256, 3)))
+    model.add(layers.MaxPooling2D())
+    model.add(layers.Conv2D(8, (3, 3), activation="relu"))
+    model.add(layers.Flatten())
+    model.add(layers.Dense(128, activation="relu"))
     model.add(layers.Dense(len(CLASS_NAMES), activation="softmax"))
 
-    # X = np.asarray(X)
-    # Y = np.asarray(Y)
-
-    model.compile(
-        # keras.optimizers.Adam(learning_rate=0.0001),
-        keras.optimizers.Adam(learning_rate=0.0001),
-        loss="categorical_crossentropy",
-        metrics=["accuracy"],
-    )
+    model.compile("adam", loss="categorical_crossentropy", metrics=["accuracy"])
 
     tensorboard_callback = keras.callbacks.TensorBoard(log_dir=LOG_DIR)
 
     model.fit(
-        Z_train,
+        data_train,
         epochs=epochs,
         callbacks=[tensorboard_callback],
-        validation_data=Z_validation,
-        # batch_size=16,
+        validation_data=data_validation,
     )
 
     model.save(model_path)
