@@ -1,9 +1,4 @@
 import argparse
-from model.combine_datasets import combine_datasets
-from model.create_isl_model import create_isl_model
-from model.test_isl_model import test_isl_model
-from model.server import start_server
-from model.hand_landmarks import create_landmarks_csv
 
 parser = argparse.ArgumentParser(description="CLI for ISL Transcription App")
 
@@ -49,12 +44,22 @@ command_create_landmarks_csv = command.add_parser(
 def main():
     args = parser.parse_args()
     if args.command == "combine-datasets":
+        from model.combine_datasets import combine_datasets
+
         combine_datasets(args)
     elif args.command == "create-isl-model":
+        from model.create_isl_model import create_isl_model
+
         create_isl_model(args)
     elif args.command == "test-isl-model":
+        from model.test_isl_model import test_isl_model
+
         test_isl_model(args)
     elif args.command == "start-server":
+        from model.server import start_server
+
         start_server(args)
     elif args.command == "create-landmarks-csv":
+        from model.hand_landmarks import create_landmarks_csv
+
         create_landmarks_csv(args)
