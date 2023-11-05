@@ -59,9 +59,9 @@ def create_isl_model(args):
     data_validation = data.skip(100).take(10)
 
     model = keras.Sequential()
-    model.add(layers.Conv2D(16, (3, 3), activation="relu", input_shape=(256, 256, 3)))
+    model.add(layers.Conv2D(4, (4, 4), activation="relu", input_shape=(256, 256, 3)))
     model.add(layers.MaxPooling2D())
-    model.add(layers.Conv2D(8, (3, 3), activation="relu"))
+    model.add(layers.Conv2D(2, (4, 4), activation="relu"))
     model.add(layers.Flatten())
     model.add(layers.Dense(128, activation="relu"))
     model.add(layers.Dense(len(CLASS_NAMES), activation="softmax"))
