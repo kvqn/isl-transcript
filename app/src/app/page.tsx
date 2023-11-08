@@ -1,14 +1,16 @@
 import Link from "next/link"
+import Page from "./live/page"
 
 export default function HomePage() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
       <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">
         <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
-          Create <span className="text-[hsl(280,100%,70%)]">T3</span> App
+          Sign <span className="text-[hsl(280,100%,70%)]">Language</span>{" "}
+          Recognition
         </h1>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-8">
-          <Link
+        <div className="flex items-center justify-center">
+          {/* <Link
             className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
             href="https://create.t3.gg/en/usage/first-steps"
             target="_blank"
@@ -29,7 +31,8 @@ export default function HomePage() {
               Learn more about Create T3 App, the libraries it uses, and how to
               deploy it.
             </div>
-          </Link>
+          </Link> */}
+          <Page />
         </div>
       </div>
     </main>
